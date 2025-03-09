@@ -73,7 +73,7 @@ def lambda_handler(event, context):
         "x-rapidapi-host": "youtube-v31.p.rapidapi.com"
     }
     bucket_name = "nazira-youtube-etl-pipeline"
-    prefix = "extracted_data/videos/raw/"
+    prefix = "extracted_videos/raw/"
     jsons_to_process = list_json_files_s3(bucket_name, prefix)
     print(f"Total {len(jsons_to_process)} videos for comment extraction")
     print()
@@ -92,14 +92,15 @@ def lambda_handler(event, context):
         # move the proccessed files
         s3.put_object(Body=content,
                       Bucket=bucket_name, 
-                      Key=f'extracted_data/videos/processed/{raw_filename.split("/")[-1]}')
+                      Key=f'extracted_videos/processed/{raw_filename.split("/")[-1]}')
         s3.delete_object(Bucket=bucket_name, Key=f'{raw_filename}')
         
         # saving comments to s3
-        comments_save_path = f"extracted_data/comments/"
+        comments_save_path = f"extracted_comments/"
         s3.put_object(Body=json.dumps(complete_channel_comments),
                       Bucket=bucket_name,
                       Key=f'{comments_save_path}{channel_name}_{channel_id}.json')
         
         print(f"{comment_count} comments fetched for all {len(complete_channel_comments)} videos and saved to {comments_save_path}/{channel_name}_{channel_id}.json")
         print()
+    

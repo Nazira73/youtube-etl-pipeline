@@ -70,7 +70,7 @@ def lambda_handler(event, context):
             client.create_bucket(Bucket=bucket_name)
 
         file_name = f'{channel_name}_{channel_id}.json'
-        s3_key = f'extracted_data/videos/raw/{file_name}'
+        s3_key = f'extracted_videos/raw/{file_name}'
 
         client.put_object(
             Body=json.dumps(all_videos),
